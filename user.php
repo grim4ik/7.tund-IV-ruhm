@@ -27,12 +27,19 @@
 		unset($_SESSION["message"]);
 	}
 	
-	
-	if ( isset($_POST["interest"]) && 
+		if ( isset($_POST["interest"]) && 
 		!empty($_POST["interest"])
 	  ) {
 		  
 		saveInterest(cleanInput($_POST["interest"]));
+		
+	}
+	
+	if ( isset($_POST["userInterest"]) && 
+		!empty($_POST["userInterest"])
+	  ) {
+		echo $_POST["userInterest"];
+		saveInterest(cleanInput($_POST["userInterest"]));
 		
 	}
 	

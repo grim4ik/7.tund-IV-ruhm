@@ -34,7 +34,7 @@
 	$people = getAllPeople();
 	
 	echo "<pre>";
-	var_dump($people[5]);
+	var_dump($people[1]);
 	echo "</pre>";
 	
 ?>
