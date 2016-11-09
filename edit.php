@@ -1,12 +1,11 @@
 <?php
 	//edit.php
 	require("functions.php");
-	require("editFunctions.php");
 	
 	if(isset($_GET["delete"]) && isset($_GET["id"])) {
 		// kustutan
 		
-		deletePerson(cleanInput($_GET["id"]));
+		$Event->deletePerson($Helper->cleanInput($_GET["id"]));
 		header("Location: data.php");
 		exit();
 	}
@@ -15,7 +14,7 @@
 	//kas kasutaja uuendab andmeid
 	if(isset($_POST["update"])){
 		
-		updatePerson(cleanInput($_POST["id"]), cleanInput($_POST["age"]), cleanInput($_POST["color"]));
+		$Event->updatePerson(cleanInput($_POST["id"]), $Helper->cleanInput($_POST["age"]), $Helper->cleanInput($_POST["color"]));
 		
 		header("Location: edit.php?id=".$_POST["id"]."&success=true");
         exit();	
@@ -23,7 +22,7 @@
 	}
 	
 	//saadan kaasa id
-	$p = getSinglePerosonData($_GET["id"]);
+	$p = $Event->getSinglePerosonData($_GET["id"]);
 	var_dump($p);
 	
 ?>

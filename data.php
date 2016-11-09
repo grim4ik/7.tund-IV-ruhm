@@ -26,21 +26,46 @@
 	) {
 		
 		
-		$color = cleanInput($_POST["color"]);
+		$color = $Helper->cleanInput($_POST["color"]);
 		
-		saveEvent(cleanInput($_POST["age"]), $color);
+		$Event->saveEvent($Helper->cleanInput($_POST["age"]), $color);
 	}
 	
-	$people = getAllPeople();
+	// otsib
+	if (isset($_GET["q"])) {
+		
+		$q = $_GET["q"];
+	
+	} else {
+		//ei otsi
+		$q = "";
+	}
+	
+	//vaikimisi, kui keegi mingit linki ei vajuta
+	$sort = "id";
+	$order = "ASC";
+	
+	if (isset($_GET["sort"]) && isset($_GET["order"])) {
+		$sort = $_GET["sort"];
+		$order = $_GET["order"];
+	}
+	
+	$people = $Event->getAllPeople($q, $sort, $order);
+	
+	
+	
+	
+	
+	
 	
 	echo "<pre>";
-	var_dump($people[1]);
+	var_dump($people[5]);
 	echo "</pre>";
 	
 ?>
 <h1>Data</h1>
 
-<?php echo$_SESSION["userEmail"];?>
+<?php echo $_SESSION["userEmail"];?>
 
 <?=$_SESSION["userEmail"];?>
 
@@ -68,14 +93,50 @@
 
 <h2>Arhiiv</h2>
 
-<?php 
+<form>
+	<input type="search" name="q" value="<?=$q;?>">
+	<input type="submit" value="Otsi">
+</form>
 
+<?php 
 	
 	$html = "<table>";
 	
 		$html .= "<tr>";
-			$html .= "<th>ID</th>";
-			$html .= "<th>Vanus</th>";
+		
+			$orderId = "ASC";
+			$arr="&darr;";
+			if (isset($_GET["order"]) && 
+				$_GET["order"] == "ASC" &&
+				$_GET["sort"] == "id" ) {
+					
+				$orderId = "DESC";
+				$arr="&uarr;";
+			}
+		
+			$html .= "<th>
+						<a href='?q=".$q."&sort=id&order=".$orderId."'>
+							ID ".$arr."
+						</a>
+					 </th>";
+					 
+					 
+			
+			$orderAge = "ASC";
+			if (isset($_GET["order"]) && 
+				$_GET["order"] == "ASC" &&
+				$_GET["sort"] == "age" ) {
+					
+				$orderAge = "DESC";
+			}
+		
+			$html .= "<th>
+						<a href='?q=".$q."&sort=age&order=".$orderAge."'>
+							Vanus
+						</a>
+					 </th>";
+			
+			
 			$html .= "<th>Värv</th>";
 		$html .= "</tr>";
 		
@@ -86,8 +147,7 @@
 				$html .= "<td>".$p->id."</td>";
 				$html .= "<td>".$p->age."</td>";
 				$html .= "<td>".$p->lightColor."</td>";
-				$html .= "<td><a href='edit.php?id=".$p->id."'>edit.php</a></td>";
-				
+                $html .= "<td><a href='edit.php?id=".$p->id."'>edit.php</a></td>";
 			$html .= "</tr>";
 		
 		}
@@ -95,14 +155,11 @@
 	$html .= "</table>";
 	
 	echo $html;
-
 ?>
 
 <h2>Midagi huvitavat</h2>
 
 <?php 
-
-
 	foreach($people as $p) {
 		
 		$style = "
@@ -120,7 +177,6 @@
 		echo "<p style ='  ".$style."  '>".$p->age."</p>";
 		
 	}
-
-
 ?>
+
 
